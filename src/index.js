@@ -60,8 +60,3 @@ function saveImg(buffer) {
 function getTimestamp() {
   return new Date().toISOString();
 }
-
-// 49, 82, 65
-// 36, 66, 51
-// 31, 51, 41
-// 21, 41, 31
