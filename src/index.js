@@ -5,14 +5,9 @@ const path = require("path");
 const width = 300;
 const height = 300;
 
-const TEA_COLORS = [
-  "rgb(36, 66, 51)",
-  "rgb(49, 82, 65)",
-  "rgb(20, 20, 20)",
-  "rgb(25, 33, 27)",
-];
+const TEA_COLORS = ["rgb(20, 20, 20)", "rgb(25, 33, 27)"];
 
-brewTea();
+for (let i = 0; i < 11; i++) brewTea();
 
 function brewTea() {
   const canvas = createCanvas(width, height);
@@ -20,22 +15,36 @@ function brewTea() {
   loadImage(path.resolve(__dirname, "assets", "cup.png")).then((image) => {
     context.drawImage(image, 0, 0);
 
-    const numLeaves = randInt(100, 850);
+    const numLeaves = randInt(100, 1000);
     for (let i = 0; i < numLeaves; i++) {
-      const x = randInt(50, 250);
-      const y = randInt(50, 250);
-      context.moveTo(x, y);
-      // const radius = randInt(1, 2);
-      const radius = 1;
-      context.arc(x, y, radius, 0, Math.PI * 2);
-      const fillColor = pluck(TEA_COLORS);
-      context.fillStyle = fillColor;
-      context.fill();
+      dropLeaf(context);
     }
 
-    const buffer = canvas.toBuffer("image/png");
-    saveImg(buffer);
+    loadImage(path.resolve(__dirname, "assets", "cup-mask-rough.png")).then(
+      (image) => {
+        context.drawImage(image, 0, 0);
+        const buffer = canvas.toBuffer("image/png");
+        saveImg(buffer);
+      }
+    );
   });
+}
+
+function dropLeaf(context) {
+  const x = randInt(50, 250);
+  const y = randInt(50, 250);
+  context.moveTo(x, y);
+
+  const radius = randInt(1, 2);
+  const startAngle = Math.random() * 4;
+  context.arc(x, y, radius, startAngle, Math.PI * 2);
+  const fillColor = getRandTeaColor();
+  context.fillStyle = fillColor;
+  context.fill();
+}
+
+function getRandTeaColor() {
+  return pluck(TEA_COLORS);
 }
 
 /** Inclusive */
